@@ -1,20 +1,19 @@
 package com.torchbell.lovecoach.common.exception;
 
-import com.torchbell.lovecoach.common.response.ResponseCode;
 import lombok.Getter;
 
 @Getter
 public class BusinessLogicException extends RuntimeException{
 
-    private final ResponseCode responseCode;
+    private final ErrorCode errorCode;
 
-    public BusinessLogicException(ResponseCode responseCode){
-        super(responseCode.getMessage());
-        this.responseCode = responseCode;
+    public BusinessLogicException(ErrorCode errorCode){
+        super(errorCode.getMessage());
+        this.errorCode = errorCode;
     }
 
-    public BusinessLogicException(ResponseCode responseCode, String customMessage){
+    public BusinessLogicException(ErrorCode errorCode, String customMessage){
         super(customMessage);
-        this.responseCode = responseCode;
+        this.errorCode = errorCode;
     }
 }

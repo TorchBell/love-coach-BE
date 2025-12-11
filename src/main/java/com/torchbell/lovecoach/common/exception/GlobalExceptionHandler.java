@@ -1,7 +1,5 @@
 package com.torchbell.lovecoach.common.exception;
 
-import com.torchbell.lovecoach.common.response.CommonResponse;
-import com.torchbell.lovecoach.common.response.ResponseCode;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -16,12 +14,12 @@ public class GlobalExceptionHandler {
      */
     @ExceptionHandler(BusinessLogicException.class)
     public ResponseEntity<CommonResponse<Void>> handleBusinessLogicException(BusinessLogicException e) {
-        log.warn("BusinessLogicException [{}]: {}", e.getResponseCode(), e.getMessage());
+        log.warn("BusinessLogicException [{}]: {}", e.getErrorCode(), e.getMessage());
 
         // CommonResponse.error()를 사용하여 명세서 구조 유지
         return ResponseEntity
-                .status(e.getResponseCode().getHttpStatus())
-                .body(CommonResponse.ofFailure(e.getResponseCode(), e.getMessage()));
+                .status(e.getErrorCode().getHttpStatus())
+                .body(CommonResponse.ofFailure(e.getErrorCode(), e.getMessage()));
     }
 
     /**
@@ -32,8 +30,8 @@ public class GlobalExceptionHandler {
         log.warn("IllegalArgumentException: {}", e.getMessage());
 
         return ResponseEntity
-                .status(ResponseCode.BAD_REQUEST.getHttpStatus())
-                .body(CommonResponse.ofFailure(ResponseCode.BAD_REQUEST, e.getMessage()));
+                .status(ErrorCode.BAD_REQUEST.getHttpStatus())
+                .body(CommonResponse.ofFailure(ErrorCode.BAD_REQUEST, e.getMessage()));
     }
 
     /**
@@ -44,7 +42,7 @@ public class GlobalExceptionHandler {
         log.error("Unhandled Exception: ", e);
 
         return ResponseEntity
-                .status(ResponseCode.INTERNAL_SERVER_ERROR.getHttpStatus())
-                .body(CommonResponse.ofFailure(ResponseCode.INTERNAL_SERVER_ERROR));
+                .status(ErrorCode.INTERNAL_SERVER_ERROR.getHttpStatus())
+                .body(CommonResponse.ofFailure(ErrorCode.INTERNAL_SERVER_ERROR));
     }
 }

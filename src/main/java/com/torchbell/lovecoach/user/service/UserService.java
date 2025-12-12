@@ -17,13 +17,16 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 @RequiredArgsConstructor
 public class UserService {
-    private UserDao userDao;
+    private final UserDao userDao;
 
     // 로그아웃은 UserService 안찍음
 
     // 유저 정보 조회
     @Transactional(readOnly = true)
     public UserInfoResponse info(Long userId) {
+        if (userId == null) {
+            throw new BusinessLogicException(ErrorCode.USER_NOT_FOUND,"로그인 정보가 없습니다");
+        }
         User user = userDao.selectUserById(userId)
                 .orElseThrow(() -> new BusinessLogicException(ErrorCode.USER_NOT_FOUND));
         return UserInfoResponse.from(user);
@@ -81,6 +84,7 @@ public class UserService {
         User newUserInfo = request.toEntity(userId);
 
         userDao.updateUser(newUserInfo);
+        newUserInfo.setEmail(user.getEmail());
         newUserInfo.setCredit(user.getCredit());
 
         return UserInfoResponse.from(newUserInfo);
@@ -88,13 +92,10 @@ public class UserService {
 
     @Transactional
     public void deleteUser(Long userId){
-        User user = userDao.selectUserById(userId)
+        userDao.selectUserById(userId)
                 .orElseThrow(() -> new BusinessLogicException(ErrorCode.USER_NOT_FOUND));
 
         userDao.deleteUser(userId);
     }
 
-
-
-    // 비밀번호는 암호화되어서 들어가기 때문에 따로 만들어야 할 듯...
 }

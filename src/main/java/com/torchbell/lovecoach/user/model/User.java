@@ -2,15 +2,15 @@ package com.torchbell.lovecoach.user.model;
 
 import com.torchbell.lovecoach.common.model.BaseEntity;
 import lombok.*;
+import lombok.experimental.SuperBuilder;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
+@SuperBuilder
 public class User extends BaseEntity {
     private Long userId;
     private String email;

@@ -1,6 +1,7 @@
 package com.torchbell.lovecoach.common.model;
 
 import lombok.*;
+import lombok.experimental.SuperBuilder;
 
 import java.time.LocalDateTime;
 
@@ -8,7 +9,7 @@ import java.time.LocalDateTime;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
+@SuperBuilder
 public class BaseEntity {
     private LocalDateTime createdAt;
     private LocalDateTime modifiedAt;

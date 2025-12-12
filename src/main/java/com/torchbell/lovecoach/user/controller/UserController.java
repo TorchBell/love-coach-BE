@@ -6,17 +6,14 @@ import com.torchbell.lovecoach.user.dto.request.UserLoginRequest;
 import com.torchbell.lovecoach.user.dto.request.UserUpdateRequest;
 import com.torchbell.lovecoach.user.dto.response.CreditUsageResponse;
 import com.torchbell.lovecoach.user.dto.response.UserInfoResponse;
-import com.torchbell.lovecoach.user.model.User;
 import com.torchbell.lovecoach.user.service.UserService;
-import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
-import org.apache.ibatis.annotations.Delete;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/users")
+@RequestMapping("/api/users")
 @RequiredArgsConstructor
 public class UserController {
 

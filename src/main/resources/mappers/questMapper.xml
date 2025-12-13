@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.torchbell.lovecoach.quest.dao.QuestDao">
+
+    <select id="selectQuestList" resultType="com.torchbell.lovecoach.quest.dto.response.QuestResponse">
+        SELECT 
+            q.quest_id, 
+            q.title, 
+            q.content, 
+            q.npc_id, 
+            q.credit,
+            IF(uq.user_quest_id IS NOT NULL, true, false) as is_accepted,
+            IFNULL(uq.is_achieved, false) as is_achieved
+        FROM quest q
+        LEFT JOIN user_quest uq ON q.quest_id = uq.quest_id AND uq.user_id = #{userId}
+        ORDER BY q.quest_id ASC
+    </select>
+
+    <select id="selectQuestById" resultType="com.torchbell.lovecoach.quest.model.Quest">
+        SELECT * FROM quest
+        WHERE quest_id = #{questId}
+    </select>
+
+    <select id="selectUserQuest" resultType="com.torchbell.lovecoach.quest.model.UserQuest">
+        SELECT * FROM user_quest
+        WHERE user_id = #{userId} AND quest_id = #{questId}
+    </select>
+
+    <insert id="insertUserQuest" useGeneratedKeys="true" keyProperty="userQuestId">
+        INSERT INTO user_quest (user_id, quest_id, is_achieved)
+        VALUES (#{userId}, #{questId}, #{isAchieved})
+    </insert>
+
+    <update id="updateUserQuest">
+        UPDATE user_quest
+        SET is_achieved = #{isAchieved}
+        WHERE user_quest_id = #{userQuestId}
+    </update>
+
+</mapper>

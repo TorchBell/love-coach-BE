@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.torchbell.lovecoach.muscle.dao.MuscleDao">
+
+    <select id="selectMuscleExerciseList" resultType="com.torchbell.lovecoach.muscle.model.MuscleExercise">
+        SELECT * FROM muscle_exercise
+    </select>
+
+    <select id="selectMuscleExerciseById" resultType="com.torchbell.lovecoach.muscle.model.MuscleExercise">
+        SELECT * FROM muscle_exercise
+        WHERE muscle_exercise_id = #{muscleExerciseId}
+    </select>
+
+    <select id="selectMuscleLogList" resultType="com.torchbell.lovecoach.muscle.model.MuscleLog">
+        SELECT ml.*, me.name as exercise_name, me.part as exercise_part
+        FROM muscle_log ml
+        JOIN muscle_exercise me ON ml.muscle_exercise_id = me.muscle_exercise_id
+        WHERE ml.user_id = #{userId}
+        AND YEAR(ml.date) = #{year}
+        AND MONTH(ml.date) = #{month}
+        ORDER BY ml.date DESC, ml.created_at DESC
+    </select>
+
+    <select id="selectMuscleLogById" resultType="com.torchbell.lovecoach.muscle.model.MuscleLog">
+        SELECT ml.*, me.name as exercise_name, me.part as exercise_part
+        FROM muscle_log ml
+        JOIN muscle_exercise me ON ml.muscle_exercise_id = me.muscle_exercise_id
+        WHERE ml.muscle_log_id = #{muscleLogId}
+    </select>
+
+    <insert id="insertMuscleLog" useGeneratedKeys="true" keyProperty="muscleLogId">
+        INSERT INTO muscle_log (user_id, muscle_exercise_id, date, set_count, reps_per_set, weight)
+        VALUES (#{userId}, #{muscleExerciseId}, #{date}, #{setCount}, #{repsPerSet}, #{weight})
+    </insert>
+
+    <update id="updateMuscleLog">
+        UPDATE muscle_log
+        SET muscle_exercise_id = #{muscleExerciseId},
+            date = #{date},
+            set_count = #{setCount},
+            reps_per_set = #{repsPerSet},
+            weight = #{weight}
+        WHERE muscle_log_id = #{muscleLogId}
+    </update>
+
+    <delete id="deleteMuscleLog">
+        DELETE FROM muscle_log
+        WHERE muscle_log_id = #{muscleLogId}
+    </delete>
+
+</mapper>

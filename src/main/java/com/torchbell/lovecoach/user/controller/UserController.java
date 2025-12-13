@@ -1,5 +1,6 @@
 package com.torchbell.lovecoach.user.controller;
 
+import com.torchbell.lovecoach.common.constant.WebSessionKey;
 import com.torchbell.lovecoach.user.dto.request.CreditUsageRequest;
 import com.torchbell.lovecoach.user.dto.request.UserJoinRequest;
 import com.torchbell.lovecoach.user.dto.request.UserLoginRequest;
@@ -7,6 +8,7 @@ import com.torchbell.lovecoach.user.dto.request.UserUpdateRequest;
 import com.torchbell.lovecoach.user.dto.response.CreditUsageResponse;
 import com.torchbell.lovecoach.user.dto.response.UserInfoResponse;
 import com.torchbell.lovecoach.user.service.UserService;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -15,10 +17,11 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/api/users")
 @RequiredArgsConstructor
+@Tag(name = "UserController")
 public class UserController {
 
     private final UserService userService;
-    private final String USER_ID_KEY = "LOGIN_USER_ID";
+    private final String USER_ID_KEY = WebSessionKey.LOGIN_USER_ID.getKey();
 
     // 로그아웃
     @GetMapping("/logout")

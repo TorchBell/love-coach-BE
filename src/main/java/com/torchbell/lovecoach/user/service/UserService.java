@@ -2,6 +2,7 @@ package com.torchbell.lovecoach.user.service;
 
 import com.torchbell.lovecoach.common.exception.BusinessLogicException;
 import com.torchbell.lovecoach.common.exception.ErrorCode;
+import com.torchbell.lovecoach.npc.dao.NpcDao;
 import com.torchbell.lovecoach.user.dao.UserDao;
 import com.torchbell.lovecoach.user.dto.request.CreditUsageRequest;
 import com.torchbell.lovecoach.user.dto.request.UserJoinRequest;
@@ -18,7 +19,7 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class UserService {
     private final UserDao userDao;
-
+    private final NpcDao npcDao;
     // 로그아웃은 UserService 안찍음
 
     // 유저 정보 조회
@@ -42,6 +43,8 @@ public class UserService {
         }
         User user = request.toEntity();
         userDao.insertUser(user);
+        // 회원가입시에 npc 생성
+        npcDao.insertNpc(user.getUserId());
     }
 
     // 로그인

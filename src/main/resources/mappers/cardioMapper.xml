@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.torchbell.lovecoach.cardio.dao.CardioDao">
+
+    <select id="selectCardioExerciseList" resultType="com.torchbell.lovecoach.cardio.model.CardioExercise">
+        SELECT * FROM cardio_exercise
+    </select>
+
+    <select id="selectCardioExerciseById" resultType="com.torchbell.lovecoach.cardio.model.CardioExercise">
+        SELECT * FROM cardio_exercise
+        WHERE cardio_exercise_id = #{cardioExerciseId}
+    </select>
+
+    <select id="selectCardioLogList" resultType="com.torchbell.lovecoach.cardio.model.CardioLog">
+        SELECT cl.*, ce.name as exercise_name, ce.met_value
+        FROM cardio_log cl
+        JOIN cardio_exercise ce ON cl.cardio_exercise_id = ce.cardio_exercise_id
+        WHERE cl.user_id = #{userId}
+        AND YEAR(cl.date) = #{year}
+        AND MONTH(cl.date) = #{month}
+        ORDER BY cl.date DESC, cl.created_at DESC
+    </select>
+
+    <select id="selectCardioLogById" resultType="com.torchbell.lovecoach.cardio.model.CardioLog">
+        SELECT cl.*, ce.name as exercise_name, ce.met_value
+        FROM cardio_log cl
+        JOIN cardio_exercise ce ON cl.cardio_exercise_id = ce.cardio_exercise_id
+        WHERE cl.cardio_log_id = #{cardioLogId}
+    </select>
+
+    <insert id="insertCardioLog" useGeneratedKeys="true" keyProperty="cardioLogId">
+        INSERT INTO cardio_log (user_id, cardio_exercise_id, date, duration_minutes, burned_kcal)
+        VALUES (#{userId}, #{cardioExerciseId}, #{date}, #{durationMinutes}, #{burnedKcal})
+    </insert>
+
+    <update id="updateCardioLog">
+        UPDATE cardio_log
+        SET cardio_exercise_id = #{cardioExerciseId},
+            date = #{date},
+            duration_minutes = #{durationMinutes},
+            burned_kcal = #{burnedKcal}
+        WHERE cardio_log_id = #{cardioLogId}
+    </update>
+
+    <delete id="deleteCardioLog">
+        DELETE FROM cardio_log
+        WHERE cardio_log_id = #{cardioLogId}
+    </delete>
+
+</mapper>

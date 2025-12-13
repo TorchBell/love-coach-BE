@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.torchbell.lovecoach.npc.dao.NpcDao">
+
+    <!-- 회원 가입시에 npc 만드는 코드 : insert into - select 구문 사용함 -->
+    <insert id="insertNpc">
+        INSERT INTO user_npc (user_id, npc_id, affection_score, current_state)
+        SELECT #{userId}, npc_id, 0, 'NORMAL'
+        FROM npc
+    </insert>
+
+    <!--  npc 목록 조회  -->
+    <select id="selectNpcListByUserId" resultType="NpcInfoResponse">
+        SELECT
+            n.npc_id AS npcId,
+            n.name,
+            n.personality,
+            un.affection_score as affectionScore,
+            un.current_state as currentState
+        FROM npc n
+        LEFT JOIN user_npc un
+        ON n.npc_id = un.npc_id AND un.user_id = #{userId}
+        ORDER BY n.npc_id asc
+    </select>
+
+    <select id="selectNpcById" resultType="Npc">
+        select * from npc
+        where npc_id = #{npcId}
+    </select>
+
+    <select id="selectChatLogListByUserIdAndNpcId" resultType="ChatLog">
+        select * from chat_log
+        where user_id = #{userId} and npc_id = #{npcId}
+        order by created_at desc
+        limit #{limit} offset #{offset}
+    </select>
+
+    <insert id="insertChatLog" useGeneratedKeys="true" keyProperty="chatId">
+        INSERT INTO chat_log (user_id, npc_id, message_user, message_ai, context, created_at)
+        VALUES (#{userId}, #{npcId}, #{messageUser}, #{messageAi}, #{context}, #{createdAt})
+
+    </insert>
+
+</mapper>

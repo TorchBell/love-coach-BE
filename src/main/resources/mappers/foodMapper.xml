@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.torchbell.lovecoach.food.dao.FoodDao">
+
+    <select id="selectFoodList" resultType="com.torchbell.lovecoach.food.model.Food">
+        SELECT * FROM food
+        WHERE food_name LIKE CONCAT('%', #{keyword}, '%')
+        LIMIT 20
+    </select>
+
+    <select id="selectFoodById" resultType="com.torchbell.lovecoach.food.model.Food">
+        SELECT * FROM food
+        WHERE food_id = #{foodId}
+    </select>
+
+    <select id="selectUserFoodList" resultType="com.torchbell.lovecoach.food.model.UserFood">
+        SELECT uf.*, f.food_name, f.calory
+        FROM user_food uf
+        JOIN food f ON uf.food_id = f.food_id
+        WHERE uf.user_id = #{userId}
+        AND YEAR(uf.date) = #{year}
+        AND MONTH(uf.date) = #{month}
+        ORDER BY uf.date DESC, uf.created_at DESC
+    </select>
+
+    <select id="selectUserFoodById" resultType="com.torchbell.lovecoach.food.model.UserFood">
+        SELECT uf.*, f.food_name, f.calory
+        FROM user_food uf
+        JOIN food f ON uf.food_id = f.food_id
+        WHERE uf.user_food_id = #{userFoodId}
+    </select>
+
+    <insert id="insertUserFood" useGeneratedKeys="true" keyProperty="userFoodId">
+        INSERT INTO user_food (user_id, food_id, date, quantity)
+        VALUES (#{userId}, #{foodId}, #{date}, #{quantity})
+    </insert>
+
+    <update id="updateUserFood">
+        UPDATE user_food
+        SET food_id = #{foodId},
+            date = #{date},
+            quantity = #{quantity}
+        WHERE user_food_id = #{userFoodId}
+    </update>
+
+    <delete id="deleteUserFood">
+        DELETE FROM user_food
+        WHERE user_food_id = #{userFoodId}
+    </delete>
+
+</mapper>

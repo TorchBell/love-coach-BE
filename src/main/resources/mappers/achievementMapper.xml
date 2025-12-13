@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.torchbell.lovecoach.achievement.dao.AchievementDao">
+
+    <select id="selectAchievementList" resultType="com.torchbell.lovecoach.achievement.dto.response.AchievementResponse">
+        SELECT 
+            a.achievement_id, 
+            a.title, 
+            a.description, 
+            a.condition_type, 
+            a.icon_url, 
+            a.reward_gallery_id,
+            IF(ua.user_achievement_id IS NOT NULL, true, false) as is_achieved,
+            ua.achieved_at
+        FROM achievement a
+        LEFT JOIN user_achievement ua ON a.achievement_id = ua.achievement_id AND ua.user_id = #{userId}
+        ORDER BY a.achievement_id ASC
+    </select>
+
+    <select id="selectAchievementById" resultType="com.torchbell.lovecoach.achievement.model.Achievement">
+        SELECT * FROM achievement
+        WHERE achievement_id = #{achievementId}
+    </select>
+
+    <select id="selectUserAchievement" resultType="com.torchbell.lovecoach.achievement.model.UserAchievement">
+        SELECT * FROM user_achievement
+        WHERE user_id = #{userId} AND achievement_id = #{achievementId}
+    </select>
+
+    <insert id="insertUserAchievement" useGeneratedKeys="true" keyProperty="userAchievementId">
+        INSERT INTO user_achievement (user_id, achievement_id, achieved_at)
+        VALUES (#{userId}, #{achievementId}, #{achievedAt})
+    </insert>
+
+</mapper>

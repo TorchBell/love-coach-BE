@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.torchbell.lovecoach.user.dao.UserDao">
+    <insert id="insertUser" useGeneratedKeys="true" keyProperty="userId">
+        insert into users(email, password, nickname, gender, birth_date, credit, is_active)
+        values(#{email}, #{password}, #{nickname}, #{gender}, #{birthDate},0,true)
+    </insert>
+
+    <select id="selectUserById" resultType="User">
+        select * from users
+        where user_id=#{userId}
+    </select>
+    <select id="selectUserByEmail" resultType="User">
+        select * from users
+        where email=#{email}
+    </select>
+
+    <!--  회원 정보 수정  -->
+    <update id="updateUser">
+        update users
+        <set>
+            <if test="nickname != null">nickname=#{nickname},</if>
+            <if test="password != null">password=#{password},</if>
+            <if test="gender != null">gender=#{gender},</if>
+            <if test="birthDate != null">birth_date=#{birthDate},</if>
+        </set>
+        where user_id = #{userId}
+    </update>
+
+    <!--  회원 탈퇴(soft delete)  -->
+    <update id="deleteUser">
+        update users
+        set is_active = false
+        where user_id = #{userId}
+    </update>
+
+    <update id="decreaseCredit">
+        update users
+        set credit = credit - #{amount}
+        where user_id = #{userId}
+    </update>
+
+
+
+</mapper>

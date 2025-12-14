@@ -16,6 +16,6 @@ public class ChatLog extends BaseEntity {
     private Long npcId;
     private String messageUser;
     private String messageAi;
-    private String context;
+    private String context = "없음";
 
 }

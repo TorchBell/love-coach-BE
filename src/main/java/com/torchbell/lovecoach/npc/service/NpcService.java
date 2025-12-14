@@ -1,6 +1,8 @@
 package com.torchbell.lovecoach.npc.service;
 
 import com.torchbell.lovecoach.common.constant.BusinessConstant;
+import com.torchbell.lovecoach.common.exception.BusinessLogicException;
+import com.torchbell.lovecoach.common.exception.ErrorCode;
 import com.torchbell.lovecoach.npc.dao.NpcDao;
 import com.torchbell.lovecoach.npc.dto.request.ChatLogRequest;
 import com.torchbell.lovecoach.npc.dto.request.ChatTalkRequest;
@@ -9,6 +11,7 @@ import com.torchbell.lovecoach.npc.dto.response.ChatTalkResponse;
 import com.torchbell.lovecoach.npc.dto.response.NpcInfoResponse;
 import com.torchbell.lovecoach.npc.model.ChatLog;
 import com.torchbell.lovecoach.npc.model.Npc;
+import com.torchbell.lovecoach.user.dao.UserDao;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -22,6 +25,7 @@ public class NpcService {
 
     private final NpcDao npcDao;
     private final AiChatService aiChatService;
+    private final UserDao userDao;
 
     // npc 목록 조회
     public List<NpcInfoResponse> getNpcInfoList(Long userId) {
@@ -45,7 +49,8 @@ public class NpcService {
     @Transactional
     public ChatTalkResponse getChatTalk(Long userId, ChatTalkRequest request) {
         // npc 이름, context, 채팅기록 넘겨줘야함
-
+        userDao.selectUserById(userId)
+                .orElseThrow(() -> new BusinessLogicException(ErrorCode.USER_NOT_FOUND, "로그인이 필요합니다."));
         Npc npc = npcDao.selectNpcById(request.getNpcId());
 
 
@@ -58,11 +63,23 @@ public class NpcService {
 
         // 첫 채팅인 경우(DB에 채팅 기록이 없는경우) 예외처리
         String context = chatLogList.isEmpty()
-                ? "첫 채팅입니다."
+                ? "이 사용자와의 첫 만남입니다. 반갑게 맞아주세요."
                 : chatLogList.get(0).getContext();
 
         // AI 답변 생성
-        String messageAi = aiChatService.getChat(npc.getName(), context, chatLogList, request.getMessage());
+        String systemInstruction = String.format("네 이름은 '%s'야. %s", npc.getName(), npc.getPersonality());
+        String messageAi = aiChatService.getChat(
+                systemInstruction,
+                context,
+                chatLogList,
+                request.getMessage()
+        );
+        // 새로운 문맥 생성
+        String newContext = aiChatService.getContext(
+                context,
+                chatLogList,
+                request.getMessage(),
+                messageAi);
 
         // DB에 저장하기
         ChatLog newChatLog = ChatLog.builder()
@@ -70,6 +87,7 @@ public class NpcService {
                         .npcId(npc.getNpcId())
                         .messageUser(request.getMessage())
                         .messageAi(messageAi)
+                        .context(newContext)
                         .createdAt(LocalDateTime.now())
                         .build();
 

@@ -2,6 +2,7 @@ package com.torchbell.lovecoach.npc.dto.gms;
 
 import lombok.Builder;
 import lombok.Getter;
+import lombok.ToString;
 
 import java.util.List;
 
@@ -13,6 +14,7 @@ public class GmsChatRequest {
 
     @Getter
     @Builder
+    @ToString
     public static class Message {
         private String role;
         private String content;

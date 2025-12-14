@@ -58,11 +58,23 @@ public class NpcService {
 
         // 첫 채팅인 경우(DB에 채팅 기록이 없는경우) 예외처리
         String context = chatLogList.isEmpty()
-                ? "첫 채팅입니다."
+                ? "이 사용자와의 첫 만남입니다. 반갑게 맞아주세요."
                 : chatLogList.get(0).getContext();
 
         // AI 답변 생성
-        String messageAi = aiChatService.getChat(npc.getName(), context, chatLogList, request.getMessage());
+        String systemInstruction = String.format("네 이름은 '%s'야. %s", npc.getName(), npc.getPersonality());
+        String messageAi = aiChatService.getChat(
+                systemInstruction,
+                context,
+                chatLogList,
+                request.getMessage()
+        );
+        // 새로운 문맥 생성
+        String newContext = aiChatService.getContext(
+                context,
+                chatLogList,
+                request.getMessage(),
+                messageAi);
 
         // DB에 저장하기
         ChatLog newChatLog = ChatLog.builder()
@@ -70,6 +82,7 @@ public class NpcService {
                         .npcId(npc.getNpcId())
                         .messageUser(request.getMessage())
                         .messageAi(messageAi)
+                        .context(newContext)
                         .createdAt(LocalDateTime.now())
                         .build();
 

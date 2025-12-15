@@ -8,6 +8,7 @@ import com.torchbell.lovecoach.cardio.dto.response.CardioExerciseResponse;
 import com.torchbell.lovecoach.cardio.dto.response.CardioLogResponse;
 import com.torchbell.lovecoach.cardio.model.CardioExercise;
 import com.torchbell.lovecoach.cardio.model.CardioLog;
+import com.torchbell.lovecoach.npc.service.NpcService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -19,7 +20,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class CardioService {
     private final CardioDao cardioDao;
-
+    private final NpcService npcService;
     // 운동 종목 목록 조회
     @Transactional(readOnly = true)
     public List<CardioExerciseResponse> getExerciseList() {
@@ -54,6 +55,7 @@ public class CardioService {
 
         CardioLog log = request.toEntity(userId);
         cardioDao.insertCardioLog(log);
+        npcService.increaseAffinity(userId, 3L, 1);
     }
 
     // 운동 기록 수정

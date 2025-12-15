@@ -15,5 +15,6 @@ public class UserAchievement extends BaseEntity {
     private Long userAchievementId;
     private Long userId;
     private Long achievementId;
+    private int currentValue;
     private LocalDateTime achievedAt;
 }

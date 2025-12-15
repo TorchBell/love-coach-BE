@@ -1,5 +1,6 @@
 package com.torchbell.lovecoach.achievement.dto.response;
 
+import com.torchbell.lovecoach.achievement.constant.AchievementType;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -14,9 +15,11 @@ public class AchievementResponse {
     private Long achievementId;
     private String title;
     private String description;
-    private String conditionType;
+    private AchievementType achievementType;
+    private int achievementValue;
     private String iconUrl;
     private Long rewardGalleryId;
     private Boolean isAchieved;
     private LocalDateTime achievedAt;
+    private int currentValue; // 현재 진행도
 }

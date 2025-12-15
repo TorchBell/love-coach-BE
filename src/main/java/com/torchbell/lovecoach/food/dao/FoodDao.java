@@ -5,6 +5,7 @@ import com.torchbell.lovecoach.food.model.UserFood;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -30,4 +31,7 @@ public interface FoodDao {
 
     // 식단 기록 삭제
     int deleteUserFood(@Param("userFoodId") Long userFoodId);
+
+    // 마지막 식단 기록 날짜 조회
+    LocalDate selectLastLogDate(@Param("userId") Long userId);
 }

@@ -23,4 +23,6 @@ public interface AchievementDao {
 
     // 유저 업적 달성 기록
     int insertUserAchievement(UserAchievement userAchievement);
+
+    int updateUserAchievement(UserAchievement userAchievement);
 }

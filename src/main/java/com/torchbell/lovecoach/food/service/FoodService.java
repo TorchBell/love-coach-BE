@@ -1,5 +1,8 @@
 package com.torchbell.lovecoach.food.service;
 
+import com.torchbell.lovecoach.achievement.constant.AchievementType;
+import com.torchbell.lovecoach.achievement.event.AchievementEvent;
+import com.torchbell.lovecoach.achievement.service.AchievementService;
 import com.torchbell.lovecoach.common.exception.BusinessLogicException;
 import com.torchbell.lovecoach.common.exception.ErrorCode;
 import com.torchbell.lovecoach.food.dao.FoodDao;
@@ -8,10 +11,13 @@ import com.torchbell.lovecoach.food.dto.response.FoodResponse;
 import com.torchbell.lovecoach.food.dto.response.UserFoodResponse;
 import com.torchbell.lovecoach.food.model.Food;
 import com.torchbell.lovecoach.food.model.UserFood;
+import com.torchbell.lovecoach.npc.service.NpcService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -19,6 +25,9 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class FoodService {
     private final FoodDao foodDao;
+    private final NpcService npcService;
+    private final AchievementService achievementService;
+    private final ApplicationEventPublisher eventPublisher;
 
     // 음식 검색
     @Transactional(readOnly = true)
@@ -53,8 +62,39 @@ public class FoodService {
         foodDao.selectFoodById(request.getFoodId())
                 .orElseThrow(() -> new BusinessLogicException(ErrorCode.RESOURCE_NOT_FOUND, "존재하지 않는 음식입니다."));
 
+        // 연속 기록 계산을 위한 마지막 기록 날짜 조회 (저장 전 조회)
+        LocalDate lastDate = foodDao.selectLastLogDate(userId);
+
         UserFood userFood = request.toEntity(userId);
         foodDao.insertUserFood(userFood);
+
+        // 연속 식단 기록 로직
+        int currentStreak = achievementService.getCurrentProgress(userId,
+                AchievementType.FOOD_STREAK);
+        int newStreak = 1; // 기본값 (끊김 or 첫 시작)
+
+        if (lastDate != null) {
+            LocalDate today = LocalDate.now();
+            LocalDate yesterday = today.minusDays(1);
+
+            if (lastDate.equals(today)) {
+                // 오늘 이미 기록함 -> 유지
+                newStreak = currentStreak;
+            } else if (lastDate.equals(yesterday)) {
+                // 어제 기록함 -> 연속 성공
+                newStreak = currentStreak + 1;
+            }
+            // else: 어제보다 이전 -> 1 (초기화)
+        }
+
+        // 업적 이벤트 발행
+        eventPublisher.publishEvent(new AchievementEvent(
+                userId,
+                AchievementType.FOOD_STREAK,
+                newStreak));
+
+        // NPC 1 (토마) 호감도 증가
+        npcService.increaseAffinity(userId, 1L, 1);
     }
 
     // 식단 기록 수정

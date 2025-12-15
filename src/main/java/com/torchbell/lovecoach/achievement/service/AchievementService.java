@@ -1,5 +1,6 @@
 package com.torchbell.lovecoach.achievement.service;
 
+import com.torchbell.lovecoach.achievement.constant.AchievementType;
 import com.torchbell.lovecoach.achievement.dao.AchievementDao;
 import com.torchbell.lovecoach.achievement.dto.response.AchievementResponse;
 import com.torchbell.lovecoach.achievement.model.Achievement;
@@ -18,7 +19,6 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class AchievementService {
     private final AchievementDao achievementDao;
-    private final GalleryDao galleryDao; // 보상 지급을 위해 필요
 
     // 업적 목록 조회
     @Transactional(readOnly = true)
@@ -49,11 +49,11 @@ public class AchievementService {
 
     // 현재 업적 진행도 조회
     @Transactional(readOnly = true)
-    public int getCurrentProgress(Long userId, com.torchbell.lovecoach.achievement.constant.AchievementType type) {
+    public int getCurrentProgress(Long userId, AchievementType type) {
         List<AchievementResponse> allAchievements = achievementDao.selectAchievementList(userId);
         return allAchievements.stream()
                 .filter(a -> type.equals(a.getAchievementType()))
-                .mapToInt(a -> a.getCurrentValue())
+                .mapToInt(AchievementResponse::getCurrentValue)
                 .max()
                 .orElse(0);
     }

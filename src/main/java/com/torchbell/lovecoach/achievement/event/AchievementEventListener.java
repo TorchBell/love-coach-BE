@@ -1,9 +1,7 @@
 package com.torchbell.lovecoach.achievement.event;
 
-import com.torchbell.lovecoach.achievement.service.AchievementService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.event.EventListener;
-import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 
 @Component

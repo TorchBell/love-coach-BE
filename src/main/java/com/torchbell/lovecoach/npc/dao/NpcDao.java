@@ -28,4 +28,12 @@ public interface NpcDao {
 
     // 채팅 저장
     int insertChatLog(ChatLog chatLog);
+
+
+    // UserNpc 조회
+    com.torchbell.lovecoach.npc.model.UserNpc selectUserNpc(@Param("userId") Long userId, @Param("npcId") Long npcId);
+
+    // UserNpc 수정 (호감도 등)
+    int updateUserNpc(com.torchbell.lovecoach.npc.model.UserNpc userNpc);
+
 }

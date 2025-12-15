@@ -8,6 +8,7 @@ import com.torchbell.lovecoach.muscle.dto.response.MuscleExerciseResponse;
 import com.torchbell.lovecoach.muscle.dto.response.MuscleLogResponse;
 import com.torchbell.lovecoach.muscle.model.MuscleExercise;
 import com.torchbell.lovecoach.muscle.model.MuscleLog;
+import com.torchbell.lovecoach.npc.service.NpcService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -19,7 +20,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class MuscleService {
     private final MuscleDao muscleDao;
-
+    private final NpcService npcService;
     // 운동 종목 목록 조회
     @Transactional(readOnly = true)
     public List<MuscleExerciseResponse> getExerciseList() {
@@ -54,6 +55,7 @@ public class MuscleService {
 
         MuscleLog log = request.toEntity(userId);
         muscleDao.insertMuscleLog(log);
+        npcService.increaseAffinity(userId, 2L, 1);
     }
 
     // 운동 기록 수정

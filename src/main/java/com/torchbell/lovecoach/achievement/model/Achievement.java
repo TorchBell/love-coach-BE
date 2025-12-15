@@ -1,5 +1,6 @@
 package com.torchbell.lovecoach.achievement.model;
 
+import com.torchbell.lovecoach.achievement.constant.AchievementType;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -17,7 +18,8 @@ public class Achievement {
     private Long achievementId;
     private String title;
     private String description;
-    private String conditionType;
+    private AchievementType achievementType;
+    private int achievementValue;
     private String iconUrl;
     private Long rewardGalleryId;
 }

@@ -40,7 +40,24 @@
     <insert id="insertChatLog" useGeneratedKeys="true" keyProperty="chatId">
         INSERT INTO chat_log (user_id, npc_id, message_user, message_ai, context, created_at)
         VALUES (#{userId}, #{npcId}, #{messageUser}, #{messageAi}, #{context}, #{createdAt})
-
     </insert>
+
+    <select id="selectUserNpc" resultType="UserNpc">
+        SELECT
+            user_npc_id as userNpcId,
+            user_id as userId,
+            npc_id as npcId,
+            affection_score as affectionScore,
+            current_state as currentState
+        FROM user_npc
+        WHERE user_id = #{userId} AND npc_id = #{npcId}
+    </select>
+
+    <update id="updateUserNpc">
+        UPDATE user_npc
+        SET affection_score = #{affectionScore},
+        current_state = #{currentState}
+        WHERE user_npc_id = #{userNpcId}
+    </update>
 
 </mapper>

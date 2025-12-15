@@ -37,12 +37,4 @@ public class AchievementController {
         return ResponseEntity.ok(achievementService.getAchievementDetail(userId, achievementId));
     }
 
-    // 업적 달성 처리
-    @PostMapping("/{achievementId}/achieve")
-    public ResponseEntity<Map<String, Object>> achieveAchievement(
-            @PathVariable Long achievementId,
-            HttpSession session) {
-        Long userId = (Long) session.getAttribute(USER_ID_KEY);
-        return ResponseEntity.ok(achievementService.achieveAchievement(userId, achievementId));
-    }
 }

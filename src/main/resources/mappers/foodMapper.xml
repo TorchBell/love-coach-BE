@@ -50,4 +50,12 @@
         WHERE user_food_id = #{userFoodId}
     </delete>
 
+    <select id="selectLastLogDate" resultType="java.time.LocalDate">
+        SELECT date
+        FROM user_food
+        WHERE user_id = #{userId}
+        ORDER BY date DESC
+        LIMIT 1
+    </select>
+
 </mapper>

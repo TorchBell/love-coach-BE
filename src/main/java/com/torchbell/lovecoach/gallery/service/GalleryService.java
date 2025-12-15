@@ -3,6 +3,7 @@ package com.torchbell.lovecoach.gallery.service;
 import com.torchbell.lovecoach.gallery.dao.GalleryDao;
 import com.torchbell.lovecoach.gallery.dto.response.GalleryResponse;
 import com.torchbell.lovecoach.gallery.model.UserGallery;
+import com.torchbell.lovecoach.notification.service.NotificationService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -16,7 +17,7 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class GalleryService {
     private final GalleryDao galleryDao;
-
+    private final NotificationService notificationService;
     // 갤러리 목록 조회
     @Transactional(readOnly = true)
     public List<GalleryResponse> getGalleryList(Long userId) {
@@ -55,6 +56,10 @@ public class GalleryService {
         result.put("galleryId", galleryId);
         result.put("isOpened", true);
         result.put("message", "갤러리가 해금되었습니다.");
+
+        // 알림 전송
+        notificationService.send(userId, "gallery", result);
+
         return result;
     }
 }

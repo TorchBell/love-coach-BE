@@ -1,7 +1,5 @@
 package com.torchbell.lovecoach.npc.service;
 
-import com.torchbell.lovecoach.achievement.constant.AchievementType;
-import com.torchbell.lovecoach.achievement.event.AchievementEvent;
 import com.torchbell.lovecoach.common.constant.BusinessConstant;
 import com.torchbell.lovecoach.npc.dao.NpcDao;
 import com.torchbell.lovecoach.npc.dto.request.ChatLogRequest;

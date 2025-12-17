@@ -1,8 +1,6 @@
 package com.torchbell.lovecoach.food.service;
 
-import com.torchbell.lovecoach.achievement.constant.AchievementType;
-import com.torchbell.lovecoach.achievement.event.AchievementEvent;
-import com.torchbell.lovecoach.achievement.service.AchievementService;
+
 import com.torchbell.lovecoach.common.exception.BusinessLogicException;
 import com.torchbell.lovecoach.common.exception.ErrorCode;
 import com.torchbell.lovecoach.food.dao.FoodDao;
@@ -18,7 +16,6 @@ import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
 

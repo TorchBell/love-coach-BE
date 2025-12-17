@@ -1,5 +1,7 @@
 package com.torchbell.lovecoach.npc.service;
 
+import com.torchbell.lovecoach.achievement.constant.AchievementType;
+import com.torchbell.lovecoach.achievement.event.AchievementEvent;
 import com.torchbell.lovecoach.common.constant.BusinessConstant;
 import com.torchbell.lovecoach.npc.dao.NpcDao;
 import com.torchbell.lovecoach.npc.dto.request.ChatLogRequest;
@@ -7,8 +9,10 @@ import com.torchbell.lovecoach.npc.dto.request.ChatTalkRequest;
 import com.torchbell.lovecoach.npc.dto.response.ChatLogResponse;
 import com.torchbell.lovecoach.npc.dto.response.ChatTalkResponse;
 import com.torchbell.lovecoach.npc.dto.response.NpcInfoResponse;
+import com.torchbell.lovecoach.npc.event.AffinityChangedEvent;
 import com.torchbell.lovecoach.npc.model.ChatLog;
 import com.torchbell.lovecoach.npc.model.Npc;
+import com.torchbell.lovecoach.npc.model.UserNpc;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -90,14 +94,18 @@ public class NpcService {
     }
 
     @Transactional
+
+    // 식단기록  -> 토마 호감도 1증가
+    // 근력 운동 기록 -> 벨 호감도 1 증가
+    // 유산소 -> 치에 호감도 1 증가
     public void increaseAffinity(Long userId, Long npcId, int amount) {
-        com.torchbell.lovecoach.npc.model.UserNpc userNpc = npcDao.selectUserNpc(userId, npcId);
+        UserNpc userNpc = npcDao.selectUserNpc(userId, npcId);
         if (userNpc != null) {
             userNpc.setAffectionScore(userNpc.getAffectionScore() + amount);
             npcDao.updateUserNpc(userNpc);
-            eventPublisher.publishEvent(new com.torchbell.lovecoach.achievement.event.AchievementEvent(
+            eventPublisher.publishEvent(new AffinityChangedEvent(
                     userId,
-                    com.torchbell.lovecoach.achievement.constant.AchievementType.AFFECTION,
+                    npcId,
                     userNpc.getAffectionScore()));
         }
     }

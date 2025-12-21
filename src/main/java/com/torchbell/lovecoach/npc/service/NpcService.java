@@ -85,9 +85,9 @@ public class NpcService {
                 .context(newContext)
                 .createdAt(LocalDateTime.now())
                 .build();
-
-        npcDao.insertChatLog(newChatLog);
-
+        if(!newChatLog.getMessageAi().equals("FastAPI 서버 연결 실패 또는 응답 오류")){
+            npcDao.insertChatLog(newChatLog);
+        }
         return ChatTalkResponse.fromEntity(newChatLog);
     }
 

@@ -9,13 +9,13 @@
             a.achievement_id,
             a.title,
             a.description,
-            UPPER(a.condition_type) as achievement_type,
-            0 as achievement_value,
+            a.achievement_type,
+            a.achievement_value,
             a.icon_url,
             a.reward_gallery_id,
             IF(ua.achieved_at IS NOT NULL, true, false) as is_achieved,
             ua.achieved_at,
-            0 as current_value
+            IFNULL(ua.current_value, 0) as current_value
         FROM achievement a
                  LEFT JOIN user_achievement ua ON a.achievement_id = ua.achievement_id AND ua.user_id = #{userId}
         ORDER BY a.achievement_id ASC
@@ -27,20 +27,20 @@
     </select>
 
     <select id="selectUserAchievement" resultType="com.torchbell.lovecoach.achievement.model.UserAchievement">
-        SELECT user_achievement_id, user_id, achievement_id, achieved_at, 0 as current_value
-        FROM user_achievement
+        SELECT * FROM user_achievement
         WHERE user_id = #{userId} AND achievement_id = #{achievementId}
     </select>
 
 
     <insert id="insertUserAchievement" useGeneratedKeys="true" keyProperty="userAchievementId">
-        INSERT INTO user_achievement (user_id, achievement_id, achieved_at)
-        VALUES (#{userId}, #{achievementId}, #{achievedAt})
+        INSERT INTO user_achievement (user_id, achievement_id, current_value, achieved_at)
+        VALUES (#{userId}, #{achievementId}, #{currentValue}, #{achievedAt})
     </insert>
 
     <update id="updateUserAchievement">
         UPDATE user_achievement
-        SET achieved_at = #{achievedAt}
+        SET current_value = #{currentValue},
+        achieved_at = #{achievedAt}
         WHERE user_achievement_id = #{userAchievementId}
     </update>
 </mapper>

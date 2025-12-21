@@ -13,7 +13,7 @@ import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
+@CrossOrigin(origins = "http://localhost:5173", allowCredentials = "true")
 @RestController
 @RequestMapping("/api/users")
 @RequiredArgsConstructor
@@ -53,6 +53,7 @@ public class UserController {
             @RequestBody UserLoginRequest request,
             HttpSession session
     ) {
+        System.out.println("로그인 컨트롤러는 찍고 있나요?");
         UserInfoResponse userInfo = userService.login(request);
         session.setAttribute(USER_ID_KEY, userInfo.getUserId());
         return ResponseEntity.ok().body(userInfo);

@@ -5,6 +5,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+import org.springframework.web.servlet.config.annotation.CorsRegistry;
 
 @Configuration
 @RequiredArgsConstructor
@@ -26,5 +27,12 @@ public class WebMvcConfig implements WebMvcConfigurer {
                         "/webjars/**",
                         "/error" // 에러 페이지
                 );
+    }
+    @Override
+    public void addCorsMappings(CorsRegistry registry) {
+        registry.addMapping("/**")
+                .allowedOrigins("http://localhost:5173") // 프런트 주소
+                .allowedMethods("GET", "POST", "PUT", "DELETE")
+                .allowCredentials(true); // 중요!
     }
 }

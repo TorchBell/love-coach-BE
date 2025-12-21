@@ -44,6 +44,6 @@ public class GlobalExceptionHandler {
         log.error("Unhandled Exception: ", e);
         return ResponseEntity
                 .status(ErrorCode.INTERNAL_SERVER_ERROR.getHttpStatus())
-                .body(ErrorResponse.of(ErrorCode.INTERNAL_SERVER_ERROR.name(), e.getMessage()));
+                .body(ErrorResponse.of(ErrorCode.INTERNAL_SERVER_ERROR.name(), e.toString() + ": " + e.getMessage()));
     }
 }

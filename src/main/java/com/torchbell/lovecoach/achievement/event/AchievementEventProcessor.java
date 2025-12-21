@@ -27,16 +27,16 @@ public class AchievementEventProcessor {
     // 업적 진행도 체크 및 달성 처리
     @Transactional
     public void checkAchievementProgress(Long userId, AchievementType type, int currentValue) {
-        // 1. 해당 타입의 모든 업적 조회
-        List<AchievementResponse> allAchievements = achievementDao.selectAchievementList(userId);
 
+        List<AchievementResponse> allAchievements = achievementDao.selectAchievementList(userId);
+        // 1. 해당 타입의 모든 업적 조회
         List<AchievementResponse> targetAchievements = allAchievements.stream()
                 .filter(a -> type.equals(a.getAchievementType()))
                 .toList();
 
         for (AchievementResponse ach : targetAchievements) {
             if (ach.getIsAchieved()) {
-                continue; // 이미 달성함
+                continue; // 이미 달성함 -> 패스
             }
 
             // 2. 진행도 업데이트
@@ -44,6 +44,7 @@ public class AchievementEventProcessor {
                     ach.getAchievementId());
             UserAchievement userAchievement;
 
+            // 해당 user_achievement가 없는 경우에 만들어줌
             if (optionalUserAchievement.isEmpty()) {
                 userAchievement = UserAchievement.builder()
                         .userId(userId)
@@ -58,6 +59,7 @@ public class AchievementEventProcessor {
             }
 
             // 3. 달성 조건 확인
+            // 현재 로직상으로는 증가하는 값에대한 업적의 경우만 취급하고 있음
             if (currentValue >= ach.getAchievementValue()) {
                 if (userAchievement.getAchievedAt() == null) {
                     userAchievement.setAchievedAt(LocalDateTime.now());

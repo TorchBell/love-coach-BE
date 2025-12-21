@@ -6,9 +6,10 @@ import lombok.Getter;
 
 @Getter
 @AllArgsConstructor
+// 업적별로 핸들러를 따로 만들게되면서 이 코드는 사용하지 않음
 public class AchievementEvent {
     private Long userId;
     private AchievementType type;
-    private int value; // 누적값 (예: 총 운동 횟수) 또는 갱신값 (현재 호감도)
+    private int value;
 }
 

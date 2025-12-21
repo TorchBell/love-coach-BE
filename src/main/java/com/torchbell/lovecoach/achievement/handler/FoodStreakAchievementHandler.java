@@ -19,10 +19,12 @@ public class FoodStreakAchievementHandler implements AchievementHandler<FoodLogC
     private final FoodDao foodDao;
 
     @Override
-    public boolean supports(Object event) {
+    public boolean supports(Object event)
+    {
         return event instanceof FoodLogCreatedEvent;
     }
 
+    // 업적핸들러를 상속받은 상세 업적핸들러에서 로직을 처리함
     @Override
     public void handle(FoodLogCreatedEvent event) {
         Long userId = event.getUserId();

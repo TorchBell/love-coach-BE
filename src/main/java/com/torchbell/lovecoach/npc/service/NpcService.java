@@ -1,9 +1,16 @@
 package com.torchbell.lovecoach.npc.service;
 
+import com.torchbell.lovecoach.cardio.dao.CardioDao;
+import com.torchbell.lovecoach.cardio.model.CardioLog;
 import com.torchbell.lovecoach.common.constant.BusinessConstant;
+import com.torchbell.lovecoach.food.dao.FoodDao;
+import com.torchbell.lovecoach.food.model.UserFood;
+import com.torchbell.lovecoach.muscle.dao.MuscleDao;
+import com.torchbell.lovecoach.muscle.model.MuscleLog;
 import com.torchbell.lovecoach.npc.dao.NpcDao;
 import com.torchbell.lovecoach.npc.dto.request.ChatLogRequest;
 import com.torchbell.lovecoach.npc.dto.request.ChatTalkRequest;
+import com.torchbell.lovecoach.npc.dto.request.ReportRequest;
 import com.torchbell.lovecoach.npc.dto.response.ChatLogResponse;
 import com.torchbell.lovecoach.npc.dto.response.ChatTalkResponse;
 import com.torchbell.lovecoach.npc.dto.response.NpcInfoResponse;
@@ -12,11 +19,14 @@ import com.torchbell.lovecoach.npc.model.ChatLog;
 import com.torchbell.lovecoach.npc.model.Npc;
 import com.torchbell.lovecoach.npc.model.UserNpc;
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
@@ -24,7 +34,10 @@ public class NpcService {
 
     private final NpcDao npcDao;
     private final AiChatService aiChatService;
-    private final org.springframework.context.ApplicationEventPublisher eventPublisher;
+    private final FoodDao foodDao;
+    private final MuscleDao muscleDao;
+    private final CardioDao cardioDao;
+    private final ApplicationEventPublisher eventPublisher;
 
     // npc 목록 조회
     public List<NpcInfoResponse> getNpcInfoList(Long userId) {
@@ -107,5 +120,50 @@ public class NpcService {
                     userNpc.getAffectionScore()));
         }
     }
+
+    // 분석 리포트 생성
+    @Transactional(readOnly = true)
+    public String createReport(Long userId, ReportRequest request) {
+        // 1. NPC에 따른 리포트 타입 및 데이터 조회
+        Long npcId = request.getNpcId();
+        int year = request.getYear();
+        int month = request.getMonth();
+
+        String reportType = "";
+        List<?> logs = null;
+        Map<String, Object> statistics = new HashMap<>();
+
+        if (npcId == 1L) { // 토마 - 식단
+            reportType = "DIET";
+            List<UserFood> foodLogs = foodDao.selectUserFoodList(userId, year, month);
+            logs = foodLogs;
+            statistics = calculateStatistics(foodLogs, "DIET");
+        } else if (npcId == 2L) { // 벨 - 근력
+            reportType = "MUSCLE";
+            List<MuscleLog> muscleLogs = muscleDao.selectMuscleLogList(userId, year, month);
+            logs = muscleLogs;
+            statistics = calculateStatistics(muscleLogs, "MUSCLE");
+        } else if (npcId == 3L) { // 치에 - 유산소
+            reportType = "CARDIO";
+            List<CardioLog> cardioLogs = cardioDao.selectCardioLogList(userId, year, month);
+            logs = cardioLogs;
+            statistics = calculateStatistics(cardioLogs, "CARDIO");
+        } else {
+            throw new IllegalArgumentException("유효하지 않은 NPC ID입니다.");
+        }
+        // 2. AI 분석 요청
+        return aiChatService.getReport(reportType, logs, statistics);
+    }
+
+    private Map<String, Object> calculateStatistics(List<?> logs, String type) {
+        Map<String, Object> stats = new HashMap<>();
+        // TODO: 추후 구체적인 통계 로직 구현 필요
+        // 현재는 스텁으로 빈 값 또는 기본값만 반환
+        stats.put("total_count", logs.size());
+        stats.put("analysis_date", LocalDateTime.now().toString());
+        return stats;
+    }
+
+
 
 }

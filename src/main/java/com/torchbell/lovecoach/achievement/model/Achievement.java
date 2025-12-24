@@ -22,4 +22,6 @@ public class Achievement {
     private int achievementValue;
     private String iconUrl;
     private Long rewardGalleryId;
+    private Long npcId;
+
 }

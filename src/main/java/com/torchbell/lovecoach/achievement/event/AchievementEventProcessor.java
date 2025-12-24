@@ -76,9 +76,12 @@ public class AchievementEventProcessor {
         }
     }
 
+    // 해당 코드는 업적 달성을 통해서 갤러리를 해금하는 경우에만 사용하는 메서드임
+    // credit을 통해서 갤러리를 해금하는 경우에는 galleryService에서 바로 notificationService에 접근함
     private void unlockReward(Long userId, Long rewardGalleryId) {
-        if (rewardGalleryId == null)
-            return;
+
+        // 업적에 대해당하는 갤러리가 없는 경우에 아무런 동작도 수행하지 않음
+        if (rewardGalleryId == null) return;
 
         Optional<UserGallery> userGallery = galleryDao.selectUserGallery(userId, rewardGalleryId);
         boolean isUnlocked = false;

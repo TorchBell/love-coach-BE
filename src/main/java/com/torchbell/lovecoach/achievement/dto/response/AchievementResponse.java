@@ -19,6 +19,7 @@ public class AchievementResponse {
     private int achievementValue;
     private String iconUrl;
     private Long rewardGalleryId;
+    private Long npcId;
     private Boolean isAchieved;
     private LocalDateTime achievedAt;
     private int currentValue; // 현재 진행도

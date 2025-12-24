@@ -13,12 +13,31 @@
             a.achievement_value,
             a.icon_url,
             a.reward_gallery_id,
+            a.npc_id,
             IF(ua.achieved_at IS NOT NULL, true, false) as is_achieved,
             ua.achieved_at,
             IFNULL(ua.current_value, 0) as current_value
         FROM achievement a
                  LEFT JOIN user_achievement ua ON a.achievement_id = ua.achievement_id AND ua.user_id = #{userId}
         ORDER BY a.achievement_id ASC
+    </select>
+
+    <select id="selectAchievementDetail" resultType="AchievementResponse">
+        SELECT
+        a.achievement_id,
+        a.title,
+        a.description,
+        a.achievement_type,
+        a.achievement_value,
+        a.icon_url,
+        a.reward_gallery_id,
+        a.npc_id,
+        IF(ua.achieved_at IS NOT NULL, true, false) as is_achieved,
+        ua.achieved_at,
+        IFNULL(ua.current_value, 0) as current_value
+        FROM achievement a
+        LEFT JOIN user_achievement ua ON a.achievement_id = ua.achievement_id AND ua.user_id = #{userId}
+        WHERE a.achievement_id = #{achievementId}
     </select>
 
     <select id="selectAchievementById" resultType="com.torchbell.lovecoach.achievement.model.Achievement">

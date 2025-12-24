@@ -26,7 +26,7 @@ public class UserService {
     @Transactional(readOnly = true)
     public UserInfoResponse info(Long userId) {
         if (userId == null) {
-            throw new BusinessLogicException(ErrorCode.USER_NOT_FOUND,"로그인 정보가 없습니다");
+            throw new BusinessLogicException(ErrorCode.USER_NOT_FOUND, "로그인 정보가 없습니다");
         }
         User user = userDao.selectUserById(userId)
                 .orElseThrow(() -> new BusinessLogicException(ErrorCode.USER_NOT_FOUND));
@@ -61,20 +61,22 @@ public class UserService {
         return UserInfoResponse.from(user);
     }
 
-    // 크레딧 사용
+    // 크레딧 변동 (충전/사용)
     @Transactional
-    public CreditUsageResponse creditUsage(CreditUsageRequest request, Long userId) {
+    public CreditUsageResponse updateCredit(CreditUsageRequest request, Long userId) {
         User user = userDao.selectUserById(userId)
                 .orElseThrow(() -> new BusinessLogicException(ErrorCode.USER_NOT_FOUND));
-        if (user.getCredit() < request.getAmount()) {
+
+        // 사용(차감)인 경우에만 잔액 확인 (amount가 음수일 때)
+        if (request.getAmount() < 0 && user.getCredit() + request.getAmount() < 0) {
             throw new BusinessLogicException(ErrorCode.BAD_REQUEST, "크레딧이 충분하지 않습니다");
         }
-        userDao.decreaseCredit(userId, request.getAmount());
 
-        return new CreditUsageResponse(user.getCredit() - request.getAmount());
+        userDao.updateCredit(userId, request.getAmount());
 
+        // 업데이트된 유저 정보 재조회 (필요시) 또는 계산된 값 반환
+        return new CreditUsageResponse(user.getCredit() + request.getAmount());
     }
-
 
     // 내 정보 수정
     @Transactional

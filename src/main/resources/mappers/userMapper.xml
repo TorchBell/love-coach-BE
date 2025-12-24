@@ -36,12 +36,11 @@
         where user_id = #{userId}
     </update>
 
-    <update id="decreaseCredit">
+    <update id="updateCredit">
         update users
-        set credit = credit - #{amount}
+        set credit = credit + #{amount}
         where user_id = #{userId}
     </update>
-
 
 
 </mapper>

@@ -14,6 +14,10 @@ public interface AchievementDao {
     // 업적 목록 조회 (유저 달성 여부 포함)
     List<AchievementResponse> selectAchievementList(@Param("userId") Long userId);
 
+    // 업적 상세 조회 (Left Join)
+    Optional<AchievementResponse> selectAchievementDetail(@Param("userId") Long userId,
+                                                          @Param("achievementId") Long achievementId);
+
     // 업적 상세 조회
     Optional<Achievement> selectAchievementById(@Param("achievementId") Long achievementId);
 

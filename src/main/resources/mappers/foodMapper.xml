@@ -16,7 +16,7 @@
     </select>
 
     <select id="selectUserFoodList" resultType="com.torchbell.lovecoach.food.model.UserFood">
-        SELECT uf.*, f.food_name, f.calory
+        SELECT uf.*, f.food_name, f.calory, f.protein, f.fat, f.carb, f.sugar, f.weight
         FROM user_food uf
         JOIN food f ON uf.food_id = f.food_id
         WHERE uf.user_id = #{userId}
@@ -26,7 +26,7 @@
     </select>
 
     <select id="selectUserFoodById" resultType="com.torchbell.lovecoach.food.model.UserFood">
-        SELECT uf.*, f.food_name, f.calory
+        SELECT uf.*, f.food_name, f.calory, f.protein, f.fat, f.carb, f.sugar, f.weight
         FROM user_food uf
         JOIN food f ON uf.food_id = f.food_id
         WHERE uf.user_food_id = #{userFoodId}

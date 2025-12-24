@@ -12,6 +12,7 @@ import org.springframework.web.client.RestClient;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 
 //@Service
 @RequiredArgsConstructor
@@ -78,6 +79,11 @@ public class GmsAiChatService implements AiChatService {
         messages.add(GmsChatRequest.Message.builder().role("user").content(userPrompt).build());
 
         return callGmsApi(messages);
+    }
+
+    @Override
+    public String getReport(String reportType, List<?> logs, Map<String, Object> statistics) {
+        return "GMS 서비스는 리포트 생성을 지원하지 않습니다.";
     }
 
     // API 호출

@@ -22,4 +22,9 @@ public class UserFood extends BaseEntity {
     // Join용 필드 (필요시 사용)
     private String foodName;
     private BigDecimal calory;
+    private BigDecimal protein;
+    private BigDecimal fat;
+    private BigDecimal carb;
+    private BigDecimal sugar;
+    private BigDecimal weight;
 }

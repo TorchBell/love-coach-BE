@@ -76,4 +76,32 @@ public class FastApiAiChatService implements AiChatService {
         }
         return context; // Fallback to existing context
     }
+
+    @Override
+    public String getReport(String reportType, List<?> logs, Map<String, Object> statistics) {
+        RestClient restClient = restClientBuilder.build();
+        Map<String, Object> requestBody = new HashMap<>();
+        requestBody.put("report_type", reportType);
+        requestBody.put("logs", logs);
+        requestBody.put("statistics", statistics);
+
+        try {
+            Map<String, Object> response = restClient.post()
+                    .uri(FASTAPI_URL + "/report")
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .body(requestBody)
+                    .retrieve()
+                    .body(new ParameterizedTypeReference<Map<String, Object>>() {
+                    });
+
+            if (response != null && response.containsKey("report")) {
+                return (String) response.get("report");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return "리포트 생성 실패";
+    }
+
+
 }

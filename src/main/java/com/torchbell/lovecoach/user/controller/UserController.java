@@ -5,7 +5,7 @@ import com.torchbell.lovecoach.user.dto.request.CreditUsageRequest;
 import com.torchbell.lovecoach.user.dto.request.UserJoinRequest;
 import com.torchbell.lovecoach.user.dto.request.UserLoginRequest;
 import com.torchbell.lovecoach.user.dto.request.UserUpdateRequest;
-import com.torchbell.lovecoach.user.dto.response.CreditUsageResponse;
+import com.torchbell.lovecoach.user.dto.response.CreditResponse;
 import com.torchbell.lovecoach.user.dto.response.UserInfoResponse;
 import com.torchbell.lovecoach.user.service.UserService;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -60,7 +60,7 @@ public class UserController {
 
     // 크레딧 변동 (충전/사용)
     @PostMapping("/credit")
-    public ResponseEntity<CreditUsageResponse> updateCredit(
+    public ResponseEntity<CreditResponse> updateCredit(
             @RequestBody CreditUsageRequest request,
             HttpSession session
     ){

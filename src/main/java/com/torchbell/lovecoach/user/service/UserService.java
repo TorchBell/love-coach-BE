@@ -8,7 +8,7 @@ import com.torchbell.lovecoach.user.dto.request.CreditUsageRequest;
 import com.torchbell.lovecoach.user.dto.request.UserJoinRequest;
 import com.torchbell.lovecoach.user.dto.request.UserLoginRequest;
 import com.torchbell.lovecoach.user.dto.request.UserUpdateRequest;
-import com.torchbell.lovecoach.user.dto.response.CreditUsageResponse;
+import com.torchbell.lovecoach.user.dto.response.CreditResponse;
 import com.torchbell.lovecoach.user.dto.response.UserInfoResponse;
 import com.torchbell.lovecoach.user.model.User;
 import lombok.RequiredArgsConstructor;
@@ -63,7 +63,7 @@ public class UserService {
 
     // 크레딧 변동 (충전/사용)
     @Transactional
-    public CreditUsageResponse updateCredit(CreditUsageRequest request, Long userId) {
+    public CreditResponse updateCredit(CreditUsageRequest request, Long userId) {
         User user = userDao.selectUserById(userId)
                 .orElseThrow(() -> new BusinessLogicException(ErrorCode.USER_NOT_FOUND));
 
@@ -75,7 +75,7 @@ public class UserService {
         userDao.updateCredit(userId, request.getAmount());
 
         // 업데이트된 유저 정보 재조회 (필요시) 또는 계산된 값 반환
-        return new CreditUsageResponse(user.getCredit() + request.getAmount());
+        return new CreditResponse(user.getCredit() + request.getAmount());
     }
 
     // 내 정보 수정

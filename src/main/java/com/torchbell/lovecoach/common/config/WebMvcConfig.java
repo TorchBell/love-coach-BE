@@ -30,7 +30,7 @@ public class WebMvcConfig implements WebMvcConfigurer {
     }
     @Override
     public void addCorsMappings(CorsRegistry registry) {
-        registry.addMapping("/**")
+        registry.addMapping("/*")
                 .allowedOriginPatterns("") // [변경] 모든 IP에서의 요청 허용 (개발 단계에서 편리함)
                 .allowedMethods("GET", "POST", "PUT", "DELETE", "PATCH")
                 .allowCredentials(true); // 쿠키/세션 인증을 위해 필요할 수 있음

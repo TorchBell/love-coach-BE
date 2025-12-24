@@ -9,6 +9,6 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class CreditUsageResponse {
+public class CreditResponse {
     private Integer remainingCredit;
 }

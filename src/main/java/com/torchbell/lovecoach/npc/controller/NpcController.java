@@ -3,6 +3,7 @@ package com.torchbell.lovecoach.npc.controller;
 import com.torchbell.lovecoach.common.constant.WebSessionKey;
 import com.torchbell.lovecoach.npc.dto.request.ChatLogRequest;
 import com.torchbell.lovecoach.npc.dto.request.ChatTalkRequest;
+import com.torchbell.lovecoach.npc.dto.request.ReportRequest;
 import com.torchbell.lovecoach.npc.dto.response.ChatLogResponse;
 import com.torchbell.lovecoach.npc.dto.response.ChatTalkResponse;
 import com.torchbell.lovecoach.npc.dto.response.NpcInfoResponse;
@@ -51,7 +52,16 @@ public class NpcController {
         Long userId = (Long) session.getAttribute(USER_ID_KEY);
 
         return ResponseEntity.ok(npcService.getChatTalk(userId,request));
+    }
 
+    // AI 분석 리포트 생성
+    @PostMapping("/report")
+    public ResponseEntity<String> createReport(
+            @RequestBody ReportRequest request,
+            HttpSession session) {
+        Long userId = (Long) session.getAttribute(USER_ID_KEY);
+        // String response = npcService.createReport(userId, request);
+        return ResponseEntity.ok(npcService.createReport(userId, request));
     }
 
 

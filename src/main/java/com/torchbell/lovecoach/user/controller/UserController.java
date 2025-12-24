@@ -58,14 +58,14 @@ public class UserController {
         return ResponseEntity.ok().body(userInfo);
     }
 
-    // 크레딧 사용
-    @PostMapping("/credit-usage")
-    public ResponseEntity<CreditUsageResponse>  creditUsage(
+    // 크레딧 변동 (충전/사용)
+    @PostMapping("/credit")
+    public ResponseEntity<CreditUsageResponse> updateCredit(
             @RequestBody CreditUsageRequest request,
             HttpSession session
     ){
         Long userId = (Long) session.getAttribute(USER_ID_KEY);
-        return ResponseEntity.ok(userService.creditUsage(request,userId));
+        return ResponseEntity.ok(userService.updateCredit(request, userId));
     }
 
     // 내 정보 수정

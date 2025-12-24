@@ -92,9 +92,8 @@ public class QuestService {
 
         // 크레딧 지급
         if (quest.getCredit() > 0) {
-            // UserDao에 increaseCredit이 없으므로 decreaseCredit에 음수를 넣거나 새로 만들어야 함.
-            // decreaseCredit은 credit = credit - amount 이므로, 음수를 넣으면 증가함.
-            userDao.decreaseCredit(userId, -quest.getCredit());
+            // UserDao.updateCredit은 amount를 더하므로, 양수를 넣으면 증가함.
+            userDao.updateCredit(userId, quest.getCredit());
         }
 
         // 현재 크레딧 조회

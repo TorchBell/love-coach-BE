@@ -134,9 +134,9 @@ public class NpcService {
         int year = request.getYear();
         int month = request.getMonth();
 
-        String reportType = "";
-        List<?> logs = null;
-        Map<String, Object> statistics = new HashMap<>();
+        String reportType;
+        List<?> logs;
+        Map<String, Object> statistics;
 
         if (npcId == 1L) { // 토마 - 식단
             reportType = "DIET";

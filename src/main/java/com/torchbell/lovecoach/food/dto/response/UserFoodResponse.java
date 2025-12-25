@@ -23,6 +23,11 @@ public class UserFoodResponse {
     // UserFood 모델에 join된 calory는 1인분(혹은 기준) 칼로리일 것.
     // 여기서는 계산된 값을 줄 수도 있고, 원본을 줄 수도 있음.
     // 일단 UserFood 모델의 값을 그대로 매핑.
+    private BigDecimal water;
+    private BigDecimal protein;
+    private BigDecimal fat;
+    private BigDecimal carb;
+    private BigDecimal sugar;
 
     public static UserFoodResponse from(UserFood userFood) {
         return UserFoodResponse.builder()
@@ -32,6 +37,11 @@ public class UserFoodResponse {
                 .date(userFood.getDate())
                 .quantity(userFood.getQuantity())
                 .calory(userFood.getCalory()) // Join된 값
+                .water(userFood.getCalory())
+                .protein(userFood.getProtein())
+                .fat(userFood.getFat())
+                .carb(userFood.getCarb())
+                .sugar(userFood.getSugar())
                 .build();
     }
 }

@@ -81,7 +81,11 @@ public class NpcService {
                 : chatLogList.get(0).getContext();
 
         // AI 답변 생성
-        String systemInstruction = String.format("네 이름은 '%s'야. %s", npc.getName(), npc.getPersonality());
+        String systemInstruction = String.format(
+                "네 이름은 '%s'야. %s , 사용자의 응답에 대해서 40자 이내로 간결하게 답변해줘",
+                npc.getName(),
+                npc.getPersonality());
+
         String messageAi = aiChatService.getChat(
                 systemInstruction,
                 context,

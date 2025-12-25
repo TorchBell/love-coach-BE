@@ -54,9 +54,10 @@ public class NpcService {
 
         // 순수 Mybatis에는 Pagination 기능을 제공하지 않아서 limit, offset을 직접 계산해줌
         int limit = request.getSize();
-        int offset = (request.getPage() - 1) * limit;
+        int page = request.getPage() < 1 ? 1 : request.getPage();
+        int offset = (page - 1) * limit;
 
-        return npcDao.selectChatLogListByUserIdAndNpcId(userId, request.getNpcId(), limit, offset)
+        return npcDao.selectChatLogListByUserIdAndNpcId(userId, request.getNpcId(), offset, limit)
                 .stream()
                 .map(ChatLogResponse::fromEntity)
                 .toList();

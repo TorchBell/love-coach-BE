@@ -26,12 +26,13 @@ public class AchievementEventProcessor {
 
     // 업적 진행도 체크 및 달성 처리
     @Transactional
-    public void checkAchievementProgress(Long userId, AchievementType type, int currentValue) {
+    public void checkAchievementProgress(Long userId, AchievementType type, int currentValue, Long npcId) {
 
         List<AchievementResponse> allAchievements = achievementDao.selectAchievementList(userId);
         // 1. 해당 타입의 모든 업적 조회
         List<AchievementResponse> targetAchievements = allAchievements.stream()
                 .filter(a -> type.equals(a.getAchievementType()))
+                .filter(a -> npcId == null || npcId.equals(a.getNpcId())) // npcId가 주어진 경우 해당 NPC의 업적만 필터링
                 .toList();
 
         for (AchievementResponse ach : targetAchievements) {

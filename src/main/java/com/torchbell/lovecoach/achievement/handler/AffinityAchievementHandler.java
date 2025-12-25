@@ -8,7 +8,7 @@ import org.springframework.stereotype.Component;
 
 @Component
 @RequiredArgsConstructor
-public class AffinityAchievementHandler implements AchievementHandler<AffinityChangedEvent>{
+public class AffinityAchievementHandler implements AchievementHandler<AffinityChangedEvent> {
 
     private final AchievementEventProcessor processor;
 
@@ -24,7 +24,7 @@ public class AffinityAchievementHandler implements AchievementHandler<AffinityCh
         processor.checkAchievementProgress(
                 event.getUserId(),
                 AchievementType.AFFECTION,
-                event.getNewScore()
-        );
+                event.getNewScore(),
+                event.getNpcId());
     }
 }

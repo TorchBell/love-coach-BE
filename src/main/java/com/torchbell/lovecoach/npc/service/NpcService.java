@@ -103,7 +103,7 @@ public class NpcService {
                 .context(newContext)
                 .createdAt(LocalDateTime.now())
                 .build();
-        if(!newChatLog.getMessageAi().equals("FastAPI 서버 연결 실패 또는 응답 오류")){
+        if (!newChatLog.getMessageAi().equals("FastAPI 서버 연결 실패 또는 응답 오류")) {
             npcDao.insertChatLog(newChatLog);
         }
         return ChatTalkResponse.fromEntity(newChatLog);
@@ -111,7 +111,7 @@ public class NpcService {
 
     @Transactional
 
-    // 식단기록  -> 토마 호감도 1증가
+    // 식단기록 -> 토마 호감도 1증가
     // 근력 운동 기록 -> 벨 호감도 1 증가
     // 유산소 -> 치에 호감도 1 증가
     public void increaseAffinity(Long userId, Long npcId, int amount) {
@@ -173,7 +173,6 @@ public class NpcService {
         } else if ("CARDIO".equals(type)) {
             calculateCardioStatistics((List<CardioLog>) logs, stats);
         }
-
 
         return stats;
     }
@@ -296,6 +295,5 @@ public class NpcService {
         stats.put("total_duration_minutes", totalDurationMinutes);
         stats.put("analyzed_days", uniqueDays);
     }
-
 
 }

@@ -12,15 +12,14 @@ import java.time.LocalDate;
 
 @Component
 @RequiredArgsConstructor
-public class FoodStreakAchievementHandler implements AchievementHandler<FoodLogCreatedEvent>{
+public class FoodStreakAchievementHandler implements AchievementHandler<FoodLogCreatedEvent> {
 
     private final AchievementService achievementService;
     private final AchievementEventProcessor processor;
     private final FoodDao foodDao;
 
     @Override
-    public boolean supports(Object event)
-    {
+    public boolean supports(Object event) {
         return event instanceof FoodLogCreatedEvent;
     }
 
@@ -50,6 +49,6 @@ public class FoodStreakAchievementHandler implements AchievementHandler<FoodLogC
         }
 
         // 4. 프로세서에게 처리 위임
-        processor.checkAchievementProgress(userId, AchievementType.FOOD_STREAK, newStreak);
+        processor.checkAchievementProgress(userId, AchievementType.FOOD_STREAK, newStreak, null);
     }
 }

@@ -15,5 +15,5 @@ public class UserGallery extends BaseEntity {
     private Long userId;
     private Long galleryId;
     private Boolean isOpened;
-    private Boolean isFavorite;
+    private Boolean isBOpened;
 }

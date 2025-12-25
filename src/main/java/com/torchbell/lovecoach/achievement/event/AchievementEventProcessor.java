@@ -81,7 +81,8 @@ public class AchievementEventProcessor {
     private void unlockReward(Long userId, Long rewardGalleryId) {
 
         // 업적에 대해당하는 갤러리가 없는 경우에 아무런 동작도 수행하지 않음
-        if (rewardGalleryId == null) return;
+        if (rewardGalleryId == null)
+            return;
 
         Optional<UserGallery> userGallery = galleryDao.selectUserGallery(userId, rewardGalleryId);
         boolean isUnlocked = false;
@@ -91,7 +92,7 @@ public class AchievementEventProcessor {
                     .userId(userId)
                     .galleryId(rewardGalleryId)
                     .isOpened(true)
-                    .isFavorite(false)
+                    .isBOpened(false)
                     .build();
             galleryDao.insertUserGallery(newUserGallery);
             isUnlocked = true;

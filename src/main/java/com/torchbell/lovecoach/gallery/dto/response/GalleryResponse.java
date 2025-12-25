@@ -14,8 +14,9 @@ public class GalleryResponse {
     private String title;
     private String imageUrl;
     private String unlockCondition;
+    private String bCutImageUrl;
     private Boolean isOpened;
-    private Boolean isFavorite;
+    private Boolean isBOpened;
     // B-Cut and Letter might be shown only in detail view or if opened.
     // Spec says "Gallery List" has these fields.
 }

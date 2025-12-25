@@ -5,15 +5,16 @@
 <mapper namespace="com.torchbell.lovecoach.gallery.dao.GalleryDao">
 
     <select id="selectGalleryList" resultType="com.torchbell.lovecoach.gallery.dto.response.GalleryResponse">
-        SELECT 
-            g.gallery_id, 
-            g.title, 
-            g.image_url, 
-            g.unlock_condition, 
-            IFNULL(ug.is_opened, false) as is_opened, 
-            IFNULL(ug.is_favorite, false) as is_favorite
+        SELECT
+            g.gallery_id,
+            g.title,
+            g.image_url,
+            g.b_cut_image_url,
+            g.unlock_condition,
+            IFNULL(ug.is_opened, false) as is_opened,
+            IFNULL(ug.is_b_opened, false) as is_b_opened
         FROM gallery g
-        LEFT JOIN user_gallery ug ON g.gallery_id = ug.gallery_id AND ug.user_id = #{userId}
+                 LEFT JOIN user_gallery ug ON g.gallery_id = ug.gallery_id AND ug.user_id = #{userId}
         ORDER BY g.gallery_id ASC
     </select>
 
@@ -23,14 +24,14 @@
     </select>
 
     <insert id="insertUserGallery" useGeneratedKeys="true" keyProperty="userGalleryId">
-        INSERT INTO user_gallery (user_id, gallery_id, is_opened, is_favorite)
-        VALUES (#{userId}, #{galleryId}, #{isOpened}, #{isFavorite})
+        INSERT INTO user_gallery (user_id, gallery_id, is_opened, is_b_opened)
+        VALUES (#{userId}, #{galleryId}, #{isOpened}, #{isBOpened})
     </insert>
 
     <update id="updateUserGallery">
         UPDATE user_gallery
         SET is_opened = #{isOpened},
-            is_favorite = #{isFavorite}
+        is_b_opened = #{isBOpened}
         WHERE user_gallery_id = #{userGalleryId}
     </update>
 
